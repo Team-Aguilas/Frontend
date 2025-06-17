@@ -211,16 +211,59 @@
 
 
 // src/components/NavBar.jsx
-import { useNavigate, Link } from 'react-router-dom';
-import './NavBar.css';  // Asegúrate de haber añadido las reglas que vimos antes
+// import { useNavigate, Link } from 'react-router-dom';
+// import './NavBar.css';  // Asegúrate de haber añadido las reglas que vimos antes
 
-export default function NavBar() {
-  const token = localStorage.getItem('token');
+// export default function NavBar() {
+//   const token = localStorage.getItem('token');
+//   const navigate = useNavigate();
+
+//   const handleLogout = () => {
+//     localStorage.removeItem('token');
+//     navigate('/login');
+//   };
+
+//   return (
+//     <nav className="navbar">
+//       <div className="navbar-container">
+//         {/* Logo / Título */}
+//         <Link to="/" className="logo">
+//           🍏 AgroRed
+//         </Link>
+
+//         {/* Botones alineados a la derecha */}
+//         <div className="nav-buttons">
+//           {token ? (
+//             <>
+//               <Link to="/crear-producto" className="btn-green">
+//                 Crear producto
+//               </Link>
+//               <button onClick={handleLogout} className="btn-red">
+//                 Cerrar sesión
+//               </button>
+//             </>
+//           ) : (
+//             <Link to="/login" className="btn-green">
+//               Iniciar sesión
+//             </Link>
+//           )}
+//         </div>
+//       </div>
+//     </nav>
+//   );
+// }
+
+
+
+
+import { useNavigate, Link } from 'react-router-dom';
+import './NavBar.css';
+
+export default function NavBar({ token, logout }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
+    logout(); // Limpia el token y redirige
   };
 
   return (
