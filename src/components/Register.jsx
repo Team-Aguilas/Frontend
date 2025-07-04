@@ -1,141 +1,81 @@
-// // src/components/Register.jsx
-// import { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { registerUser } from '../services/userService';
+// frontend/src/components/Register.jsx
+import React, { useState } from 'react';
+import { registerUser } from '../services/authService';
 
-// export default function Register() {
-//   const [email, setEmail] = useState('');
-//   const [fullName, setFullName] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [error, setError] = useState('');
-//   const [success, setSuccess] = useState('');
-//   const navigate = useNavigate();
-
-//   const handleSubmit = async e => {
-//     e.preventDefault();
-//     setError('');
-//     setSuccess('');
-//     try {
-//       await registerUser({ email, full_name: fullName, password });
-//       setSuccess('¡Usuario creado con éxito! Redirigiendo al login…');
-//       setTimeout(() => navigate('/login'), 1500);
-//     } catch (err) {
-//       setError(err.detail || err.message || 'Error al registrar.');
-//     }
-//   };
-
-//   return (
-//     <div className="max-w-md mx-auto mt-10 p-6 border rounded shadow">
-//       <h2 className="text-2xl mb-4">Crear nueva cuenta</h2>
-//       {error && <p className="text-red-500 mb-2">{error}</p>}
-//       {success && <p className="text-green-500 mb-2">{success}</p>}
-//       <form onSubmit={handleSubmit} className="space-y-4">
-//         <div>
-//           <label className="block mb-1">Email</label>
-//           <input
-//             type="email"
-//             value={email}
-//             onChange={e => setEmail(e.target.value)}
-//             required
-//             className="w-full px-3 py-2 border rounded"
-//           />
-//         </div>
-//         <div>
-//           <label className="block mb-1">Nombre completo</label>
-//           <input
-//             type="text"
-//             value={fullName}
-//             onChange={e => setFullName(e.target.value)}
-//             className="w-full px-3 py-2 border rounded"
-//           />
-//         </div>
-//         <div>
-//           <label className="block mb-1">Contraseña</label>
-//           <input
-//             type="password"
-//             value={password}
-//             onChange={e => setPassword(e.target.value)}
-//             required
-//             minLength={8}
-//             className="w-full px-3 py-2 border rounded"
-//           />
-//         </div>
-//         <button
-//           type="submit"
-//           className="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700"
-//         >
-//           Registrarse
-//         </button>
-//       </form>
-//     </div>
-//   );
-// }
-
-// src/components/Register.jsx
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../services/userService';
-import './Register.css';
-
-export default function Register() {
+function Register() {
   const [email, setEmail] = useState('');
-  const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const navigate = useNavigate();
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage('');
     setError('');
-    setSuccess('');
     try {
-      await registerUser({ email, full_name: fullName, password });
-      setSuccess('¡Usuario creado con éxito! Redirigiendo al login…');
-      setTimeout(() => navigate('/login'), 1500);
+      const newUser = await registerUser({ email, password, full_name: fullName });
+      setMessage(`¡Usuario ${newUser.email} registrado con éxito!`);
+      // Limpiar campos
+      setEmail('');
+      setPassword('');
+      setFullName('');
     } catch (err) {
-      setError(err.detail || err.message || 'Error al registrar.');
+      setError(err.detail || 'Error al registrar el usuario.');
     }
   };
 
-  return (
-    <div className="register-page">
-      <div className="register-card">
-        <h2>Crear nueva cuenta</h2>
-        {error && <p className="error">{error}</p>}
-        {success && <p className="success">{success}</p>}
+  const formStyle = {
+    padding: '20px',
+    border: '1px solid #ccc',
+    borderRadius: '8px',
+    maxWidth: '400px',
+    margin: '20px auto'
+  };
 
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Nombre completo</label>
-            <input
-              type="text"
-              value={fullName}
-              onChange={e => setFullName(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>Contraseña</label>
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              minLength={8}
-            />
-          </div>
-          <button type="submit">Registrarse</button>
-        </form>
-      </div>
+  const inputStyle = {
+    display: 'block',
+    width: '95%',
+    padding: '8px',
+    marginBottom: '10px',
+    borderRadius: '4px',
+    border: '1.5px solid #ddd',
+  };
+
+  return (
+    <div style={formStyle}>
+      <h2>Registrar Nuevo Usuario</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="Correo Electrónico"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          style={inputStyle}
+        />
+        <input
+          type="text"
+          placeholder="Nombre Completo"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          style={inputStyle}
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          minLength="8"
+          style={inputStyle}
+        />
+        <button type="submit" style={{ padding: '10px 15px', cursor: 'pointer' }}>Registrar</button>
+      </form>
+      {message && <p style={{ color: 'green' }}>{message}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 }
+
+export default Register;

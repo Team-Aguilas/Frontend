@@ -1,111 +1,36 @@
+// frontend/src/components/ProductList.jsx (VERSIÓN SIMPLIFICADA)
 
-
-
-// import React, { useState, useEffect } from 'react';
-// import { getAllProducts } from '../services/productService';
-// import ProductCard from './ProductCard';
-
-// function ProductList({ token }) {
-//   const [products, setProducts] = useState([]);
-//   // ...
-
-//   const loadProducts = async () => {
-//     const data = await getAllProducts();
-//     setProducts(data);
-//   };
-
-//   useEffect(() => {
-//     loadProducts();
-//   }, []);
-
-//   const handleDelete = (deletedId) => {
-//     setProducts(prev => prev.filter(p => p.id !== deletedId));
-//   };
-
-//   return (
-//     <div>
-//       {/* título, loading, error */}
-//       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
-//         {products.map(product => (
-//           <ProductCard
-//             key={product.id}
-//             product={product}
-//             token={token}
-//             onDelete={handleDelete}
-//           />
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default ProductList;
-
-// src/components/ProductList.jsx
-import React, { useState, useEffect } from 'react';
-import { getAllProducts } from '../services/productService';
+import React from 'react';
 import ProductCard from './ProductCard';
+import { Grid, Typography, CircularProgress, Box } from '@mui/material';
 
-export default function ProductList({ token }) {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading]   = useState(true);
-  const [error, setError]       = useState(null);
+// Este componente ahora recibe todo como props, es más predecible.
+function ProductList({ products, loading, error }) {
 
-  const loadProducts = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await getAllProducts();
-      setProducts(data);
-    } catch (err) {
-      setError(err.message || 'Error al cargar productos');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadProducts();
-  }, []);
-
-  const handleDelete = (deletedId) => {
-    setProducts(prev => prev.filter(p => p.id !== deletedId));
-  };
-
-  if (loading) {
-    return <p style={{ textAlign: 'center', marginTop: '50px' }}>Cargando productos… ⏳</p>;
-  }
-
-  if (error) {
-    return <p style={{ color: 'red', textAlign: 'center', marginTop: '50px' }}>Error: {error}</p>;
-  }
+  if (loading) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}><CircularProgress /></Box>;
+  if (error) return <Typography color="error" align="center" sx={{ mt: 5 }}>Error: {error}</Typography>;
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2 style={{ textAlign: 'center', color: '#333', marginBottom: '30px' }}>
+    <Box>
+      <Typography variant="h4" component="h2" gutterBottom align="center">
         🍓 Nuestros Productos Frescos 🥕
-      </h2>
+      </Typography>
+      
       {products.length === 0 ? (
-        <p style={{ textAlign: 'center' }}>
-          No se encontraron productos. ¡Agrega alguno desde "Crear producto"!
-        </p>
+        <Typography align="center" sx={{ mt: 3 }}>
+          No hay productos disponibles en este momento. ¡Intenta añadir uno si has iniciado sesión!
+        </Typography>
       ) : (
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '10px',
-          justifyContent: 'center'
-        }}>
+        <Grid container spacing={4} sx={{ mt: 2 }}>
           {products.map(product => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              token={token}
-              onDelete={handleDelete}
-            />
+            <Grid key={product.id || product._id} xs={12} sm={6} md={6} lg={4}>
+              <ProductCard product={product} />
+            </Grid>
           ))}
-        </div>
+        </Grid>
       )}
-    </div>
+    </Box>
   );
 }
+
+export default ProductList;
