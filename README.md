@@ -1,123 +1,54 @@
-# Marketplace de Frutas y Verduras (Arquitectura de Microservicios)
+# Frontend del Marketplace (React)
 
-Este es un proyecto full-stack para una aplicación de marketplace, diseñado con una arquitectura de microservicios en el backend y una interfaz de usuario moderna en el frontend.
+Esta es la aplicación de frontend para el "Marketplace de Frutas y Verduras". Es una Single Page Application (SPA) construida con React que consume los microservicios del backend para proporcionar la interfaz de usuario.
 
-## Arquitectura del Proyecto
-
-El proyecto está dividido en tres componentes principales que se ejecutan de forma independiente:
-
--   **`products_service`**: Un microservicio de FastAPI (Python) que maneja toda la lógica de productos: CRUD, subida de imágenes y autorización por propietario.
--   **`users_service`**: Un microservicio de FastAPI (Python) que maneja el registro de usuarios, la autenticación (login) y la generación de tokens JWT.
--   **`frontend`**: Una aplicación de React (JavaScript) construida con Vite y Material-UI que consume los dos servicios de backend para proporcionar la interfaz de usuario.
--   **`common`**: Un directorio que contiene el código compartido (modelos Pydantic) utilizado por ambos servicios de backend.
+La aplicación permite a los usuarios ver productos, buscar y filtrar el catálogo, registrarse, iniciar sesión, y gestionar los productos que han creado.
 
 ## Tecnologías Utilizadas
 
--   **Backend**: Python, FastAPI, Motor, Pydantic, Uvicorn
--   **Frontend**: React, Vite, Material-UI (MUI), Axios
--   **Base de Datos**: MongoDB
--   **Autenticación**: JWT (python-jose), Passlib (bcrypt)
+-   **Framework/Librería:** React
+-   **Bundler/Entorno de Desarrollo:** Vite
+-   **Librería de UI:** Material-UI (MUI)
+-   **Routing:** React Router
+-   **Cliente HTTP:** Axios
+-   **Gestión de Estado (Autenticación):** React Context
+-   **Lenguaje:** JavaScript (JSX)
 
 ## Prerrequisitos
 
 Asegúrate de tener instalado lo siguiente en tu sistema:
--   Python 3.11+ y pip
--   Node.js 18.x+ y npm
--   MongoDB Server (corriendo localmente o en un servicio como MongoDB Atlas)
+-   Node.js (versión 18.x o superior es recomendada)
+-   npm (usualmente se instala con Node.js)
+-   **Importante:** Los dos microservicios del backend (`products_service` y `users_service`) deben estar en ejecución para que el frontend pueda obtener y enviar datos.
 
-## Guía de Instalación y Configuración
+## Configuración
 
-1.  **Clonar el Repositorio (si aplica):**
-    ```bash
-    git clone <url-del-repositorio>
-    cd market_place_project
+1.  **Variables de Entorno:**
+    En la raíz de esta carpeta (`frontend/`), crea un archivo llamado `.env.development` con las URLs de los servicios de backend:
+    ```env
+    VITE_PRODUCTS_API_URL=http://localhost:8001/api/v1
+    VITE_USERS_API_URL=http://localhost:8002/api/v1
+    VITE_PRODUCTS_SERVER_URL=http://localhost:8001
     ```
 
-2.  **Entorno Virtual de Python:**
-    Se recomienda usar un único entorno virtual en la raíz del proyecto.
-    ```bash
-    python -m venv venv
-    .\venv\Scripts\Activate  # En Windows (PowerShell)
-    # source venv/bin/activate  # En Linux/macOS
-    ```
+## Instalación
 
-3.  **Instalar Dependencias del Backend:**
-    Instala los requerimientos para ambos servicios:
-    ```bash
-    pip install -r products_service/requirements.txt
-    pip install -r users_service/requirements.txt
-    ```
-
-4.  **Instalar Dependencias del Frontend:**
+1.  Navega a la carpeta `frontend` en tu terminal.
     ```bash
     cd frontend
+    ```
+2.  Instala todas las dependencias del proyecto.
+    ```bash
     npm install
-    cd ..
     ```
 
-5.  **Configurar Variables de Entorno:**
-    Crea un archivo `.env` dentro de `products_service` y otro dentro de `users_service` con el siguiente contenido:
+## Ejecución en Modo Desarrollo
 
-    -   **`products_service/.env`**:
-        ```env
-        PROJECT_NAME="Servicio de Productos"
-        MONGO_URI="mongodb://localhost:27017/"
-        MONGO_DB_NAME="marketplace_db"
-        SECRET_KEY="tu_clave_secreta_muy_larga_y_segura_aqui"
-        ALGORITHM="HS256"
-        ACCESS_TOKEN_EXPIRE_MINUTES=30
-        ```
+Para iniciar el servidor de desarrollo de Vite:
 
-    -   **`users_service/.env`**:
-        ```env
-        PROJECT_NAME="Servicio de Usuarios"
-        MONGO_URI="mongodb://localhost:27017/"
-        MONGO_DB_NAME="marketplace_db"
-        SECRET_KEY="tu_clave_secreta_muy_larga_y_segura_aqui"
-        ALGORITHM="HS256"
-        ACCESS_TOKEN_EXPIRE_MINUTES=30
-        ```
-    **Importante:** La `SECRET_KEY` debe ser idéntica en ambos archivos.
-
-## Cómo Ejecutar la Aplicación Completa
-
-Necesitarás **tres terminales** separadas, todas ubicadas en la carpeta raíz (`market_place_project/`).
-
-#### **Terminal 1: Iniciar Servicio de Productos**
-```powershell
-# Activa el entorno virtual
-.\venv\Scripts\Activate
-
-# Configura el PYTHONPATH para encontrar la carpeta 'common'
-$env:PYTHONPATH="."
-
-# Inicia el servidor en el puerto 8001
-uvicorn products_service.app.main:app --reload --port 8001
-```
-
-#### **Terminal 2: Iniciar Servicio de Usuarios**
-```powershell
-# Activa el entorno virtual
-.\venv\Scripts\Activate
-
-# Configura el PYTHONPATH (necesario en cada terminal)
-$env:PYTHONPATH="."
-
-# Inicia el servidor en el puerto 8002
-uvicorn users_service.app.main:app --reload --port 8002
-```
-
-#### **Terminal 3: Iniciar Frontend**
-```powershell
-# Navega a la carpeta del frontend
-cd frontend
-
-# Inicia el servidor de desarrollo de Vite
-npm run dev
-```
-
-### Acceso a la Aplicación
-
--   **Frontend**: Abre tu navegador en la URL que indique Vite (usualmente `http://localhost:5173`).
--   **Documentación API Productos**: `http://localhost:8001/docs`
--   **Documentación API Usuarios**: `http://localhost:8002/docs`
+1.  Asegúrate de estar en la carpeta `frontend/`.
+2.  Ejecuta el siguiente comando:
+    ```bash
+    npm run dev
+    ```
+3.  Abre tu navegador y ve a la URL que indica la terminal (usualmente **http://localhost:5173/**).
