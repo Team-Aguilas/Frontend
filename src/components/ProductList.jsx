@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ProductCard from './ProductCard';
-import { Grid, Typography, CircularProgress, Box } from '@mui/material';
+import { Typography, CircularProgress, Box } from '@mui/material';
 
 // Este componente ahora recibe todo como props, es más predecible.
 function ProductList({ products, loading, error }) {
@@ -11,23 +11,26 @@ function ProductList({ products, loading, error }) {
   if (error) return <Typography color="error" align="center" sx={{ mt: 5 }}>Error: {error}</Typography>;
 
   return (
+    
     <Box>
-      <Typography variant="h4" component="h2" gutterBottom align="center">
-        🍓 Nuestros Productos Frescos 🥕
-      </Typography>
-      
       {products.length === 0 ? (
         <Typography align="center" sx={{ mt: 3 }}>
           No hay productos disponibles en este momento. ¡Intenta añadir uno si has iniciado sesión!
         </Typography>
       ) : (
-        <Grid container spacing={4} sx={{ mt: 2 }}>
+        <Box sx={{
+          display: 'grid',
+          // Esto crea columnas responsivas. Cada una tendrá un mínimo de 340px
+          // y se ajustarán automáticamente para llenar el contenedor.
+          gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+          gap: 3, // Espacio entre las tarjetas
+          mt: 2,
+        }}>
           {products.map(product => (
-            <Grid key={product.id || product._id} xs={12} sm={6} md={6} lg={4}>
-              <ProductCard product={product} />
-            </Grid>
+            // La tarjeta se renderiza directamente aquí, sin un <Grid item> que la envuelva.
+            <ProductCard key={product.id || product._id} product={product} />
           ))}
-        </Grid>
+        </Box>
       )}
     </Box>
   );

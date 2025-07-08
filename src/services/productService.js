@@ -3,10 +3,10 @@ import { createApiClient } from './api';
 
 const productApiClient = createApiClient(PRODUCTS_API_URL);
 
-export const getAllProducts = async () => {
-  // ... (el código de getAllProducts que ya tenías)
+export const getAllProducts = async (filters = {}) => {
   try {
-    const response = await productApiClient.get('/products/');
+    // Axios se encarga de construir la URL con los parámetros, ej: /products?search=manzana
+    const response = await productApiClient.get('/products/', { params: filters });
     return response.data;
   } catch (error) {
     console.error('Error fetching products:', error.response?.data || error.message);

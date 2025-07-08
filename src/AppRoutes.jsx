@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import AddProductPage from './pages/AddProductPage';
 import EditProductPage from './pages/EditProductPage'; 
+import CatalogPage from './pages/CatalogPage';
 
 function AppRoutes() {
   return (
@@ -14,6 +15,7 @@ function AppRoutes() {
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/products/:productId" element={<ProductDetailPage />} />
+      <Route path="/products" element={<CatalogPage />} />
       <Route
         path="/products/new"
         element={
