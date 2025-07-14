@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardActions, CardContent, CardMedia, Typography, Box } from '@mui/material';
 import { PRODUCTS_SERVER_URL } from '../config';
+import RatingDisplay from './RatingDisplay';
 
 function ProductCard({ product }) {
   const imageUrl = product.image_url 
@@ -60,9 +61,16 @@ function ProductCard({ product }) {
           <Typography gutterBottom variant="h5" component="div" fontWeight="bold">
             {product.name}
           </Typography>
-          <Typography variant="body1" color="text.secondary">
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
             Stock: {product.stock}
           </Typography>
+          
+          {/* Mostrar calificación en la tarjeta */}
+          <RatingDisplay 
+            averageRating={product.average_rating} 
+            totalRatings={product.total_ratings}
+            showDetails={false}
+          />
         </CardContent>
       </Link>
 
