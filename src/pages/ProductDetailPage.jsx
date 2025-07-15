@@ -119,8 +119,15 @@ function ProductDetailPage() {
   if (error) return <Typography color="error" align="center" sx={{ mt: 5 }}>{error}</Typography>;
   if (!product) return <Typography align="center" sx={{ mt: 5 }}>Producto no encontrado.</Typography>;
 
+  // Determinar si es URL externa o archivo local
+  const isExternalUrl = product.image_url && (
+    product.image_url.startsWith('http://') || 
+    product.image_url.startsWith('https://') || 
+    product.image_url.startsWith('data:')
+  );
+
   const imageUrl = product.image_url
-    ? `${PRODUCTS_SERVER_URL}${product.image_url}`
+    ? (isExternalUrl ? product.image_url : `${PRODUCTS_SERVER_URL}${product.image_url}`)
     : `https://via.placeholder.com/600x600?text=${encodeURIComponent(product.name)}`;
   
   const whatsappNumber = product.whatsapp_number?.replace(/\D/g, '');

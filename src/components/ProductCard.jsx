@@ -11,8 +11,15 @@ function ProductCard({ product }) {
   const [comments, setComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(false);
 
+  // Determinar si es URL externa o archivo local
+  const isExternalUrl = product.image_url && (
+    product.image_url.startsWith('http://') || 
+    product.image_url.startsWith('https://') || 
+    product.image_url.startsWith('data:')
+  );
+
   const imageUrl = product.image_url 
-    ? `${PRODUCTS_SERVER_URL}${product.image_url}` 
+    ? (isExternalUrl ? product.image_url : `${PRODUCTS_SERVER_URL}${product.image_url}`)
     : `https://via.placeholder.com/300x300?text=${encodeURIComponent(product.name)}`;
 
   const handleShowComments = async (e) => {

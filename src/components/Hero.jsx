@@ -47,6 +47,25 @@ function Hero() {
           variant="contained" 
           color="secondary" 
           size="large"
+          sx={{
+            fontSize: '1.2rem',
+            padding: '12px 40px',
+            minWidth: '200px',
+            borderRadius: '12px',
+            textTransform: 'none',
+            fontWeight: 600,
+            boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)',
+            background: 'linear-gradient(135deg, #74a57f 0%, #5d8a66 100%)',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-3px) scale(1.05)',
+              boxShadow: '0 12px 35px rgba(0, 0, 0, 0.4)',
+              background: 'linear-gradient(135deg, #5d8a66 0%, #4a6e52 100%)',
+            },
+            '&:active': {
+              transform: 'translateY(-1px) scale(1.02)',
+            }
+          }}
         >
           Ver Productos
         </Button>
