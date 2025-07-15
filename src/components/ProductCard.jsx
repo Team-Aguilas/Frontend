@@ -56,13 +56,14 @@ function ProductCard({ product }) {
           color: 'inherit', 
           display: 'flex', 
           flexDirection: 'column', 
-          flexGrow: 0,
+          flexGrow: 1,
         }}
       >
         {/* Imagen con margen y bordes redondeados */}
         <Box 
           sx={{
-            m : 1,
+            m : 2,
+            height: 250,
             display: 'flex', 
             justifyContent: 'center', 
             alignItems: 'center',
@@ -76,10 +77,9 @@ function ProductCard({ product }) {
             image={imageUrl}
             alt={product.name}
             sx={{
-              height: '100%',
-              width: '100%',
-              objectFit: 'contain', // Asegura esquinas redondeadas visibles
-              display: 'block'
+            height: '100%', // 1. Establecemos una altura fija (puedes ajustarla)
+            width: '100%',
+            objectFit: 'cover', // 2. La imagen cubrirá el área, recortándose si es necesario
             }}
           />
         </Box>
@@ -105,7 +105,7 @@ function ProductCard({ product }) {
 
       <CardActions sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, pt: 0 }}>
         <Typography variant="h5" color="primary" fontWeight="500">
-          ${product.price ? product.price.toFixed(2) : 'N/A'}
+          ${product.price ? product.price.toLocaleString('es-CO') : 'N/A'}
         </Typography>
       </CardActions>
       

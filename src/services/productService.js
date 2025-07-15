@@ -2,12 +2,21 @@ import { PRODUCTS_API_URL } from '../config';
 import { createApiClient } from './api';
 
 const productApiClient = createApiClient(PRODUCTS_API_URL);
+const PAGE_SIZE = 3;
 
 export const getAllProducts = async (filters = {}) => {
+  // Extraemos la 'page' de los filtros para usarla en los cálculos
+  const { page = 1, ...otherFilters } = filters;
+
+  const params = {
+    ...otherFilters,
+    skip: (page - 1) * PAGE_SIZE, // Calculamos cuántos items saltar
+    limit: PAGE_SIZE,
+  };
+
   try {
-    // Axios se encarga de construir la URL con los parámetros, ej: /products?search=manzana
-    const response = await productApiClient.get('/products/', { params: filters });
-    return response.data;
+    const response = await productApiClient.get('/products/', { params });
+    return response.data; // Devuelve { total: ..., products: [...] }
   } catch (error) {
     console.error('Error fetching products:', error.response?.data || error.message);
     throw error.response?.data || new Error('Failed to fetch products');

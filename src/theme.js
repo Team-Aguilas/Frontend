@@ -3,7 +3,7 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#2e7d32', // Un verde natural más oscuro para los elementos principales
+      main: '#74a57f', // Un verde natural más oscuro para los elementos principales
     },
     secondary: {
       main: '#ff9800', // Un naranja para acentos y botones de acción
