@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getProductById, deleteProduct, createProductRating, getMyRatingForProduct } from '../services/productService';
+import { getProductById, deleteProduct, createProductRating, getMyRatingForProduct, getProductRatings } from '../services/productService';
 import { useAuth } from '../context/AuthContext';
 import { Grid, Box, Typography, Button, CircularProgress, Paper, Divider, Stack } from '@mui/material';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
@@ -10,12 +10,15 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { PRODUCTS_SERVER_URL } from '../config';
 import RatingDisplay from '../components/RatingDisplay';
 import StarRatingComponent from '../components/StarRatingComponent';
+import CommentsModal from '../components/CommentsModal';
 
 function ProductDetailPage() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [myRating, setMyRating] = useState(null);
+  const [commentsModalOpen, setCommentsModalOpen] = useState(false);
+  const [comments, setComments] = useState([]);
   const { productId } = useParams();
   const { user, isLoggedIn } = useAuth();
   const navigate = useNavigate();
@@ -98,6 +101,21 @@ function ProductDetailPage() {
     }
   };
 
+  const handleShowComments = async () => {
+    if (product.total_ratings === 0) return;
+    
+    try {
+      const ratingsData = await getProductRatings(productId);
+      setComments(ratingsData);
+      setCommentsModalOpen(true);
+    } catch (error) {
+      console.error('Error al cargar comentarios:', error);
+      // Abrir modal aunque falle para mostrar mensaje de error
+      setComments([]);
+      setCommentsModalOpen(true);
+    }
+  };
+
   if (loading) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}><CircularProgress /></Box>;
   if (error) return <Typography color="error" align="center" sx={{ mt: 5 }}>{error}</Typography>;
   if (!product) return <Typography align="center" sx={{ mt: 5 }}>Producto no encontrado.</Typography>;
@@ -135,12 +153,14 @@ function ProductDetailPage() {
               <Typography variant="h3" component="h1" fontWeight="bold" gutterBottom>{product.name}</Typography>
               <Typography variant="h6" color="text.secondary" gutterBottom>Categoría: {product.category}</Typography>
               
-              {/* Mostrar calificación promedio */}
+              {/* Mostrar calificación promedio - clickeable para ver comentarios */}
               <Box sx={{ my: 2 }}>
                 <RatingDisplay 
                   averageRating={product.average_rating} 
                   totalRatings={product.total_ratings}
                   showDetails={true}
+                  clickable={true}
+                  onClick={handleShowComments}
                 />
               </Box>
               
@@ -322,6 +342,14 @@ function ProductDetailPage() {
           📋 Log Estado
         </Button>
       </Box> */}
+      
+      {/* Modal de comentarios */}
+      <CommentsModal
+        open={commentsModalOpen}
+        onClose={() => setCommentsModalOpen(false)}
+        comments={comments}
+        productName={product.name}
+      />
     </Paper>
   );
 }
