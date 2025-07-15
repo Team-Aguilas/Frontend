@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import ProductList from '../components/ProductList';
 import { getAllProducts } from '../services/productService';
 import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Paper, Typography, Pagination, Stack } from '@mui/material';
+import './CatalogPage.css';
 
 const PAGE_SIZE = 3;
 
@@ -62,12 +63,12 @@ function CatalogPage() {
   };
 
   return (
-    <Box>
-      <Typography variant="h3" component="h1" gutterBottom align="center" sx={{ fontWeight: 'bold' }}>
+    <Box className="catalog-container">
+      <Typography variant="h3" component="h1" gutterBottom align="center" className="catalog-title">
         Nuestro Catálogo
       </Typography>
       
-      <Paper sx={{ p: 2, mb: 4, borderRadius: 2 }}>
+      <Paper className="catalog-filters-container" sx={{ p: 2, mb: 4, borderRadius: 2 }}>
         <Stack
           direction={{ xs: 'column', md: 'row' }}
           spacing={2}
@@ -79,9 +80,10 @@ function CatalogPage() {
             size="small"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="catalog-search-input"
             sx={{ width: '100%', flexGrow: 1 }}
           />
-          <FormControl size="small" sx={{ width: { xs: '100%', md: 200 }, minWidth: 180 }}>
+          <FormControl size="small" className="catalog-select-field" sx={{ width: { xs: '100%', md: 200 }, minWidth: 180 }}>
             <InputLabel>Categoría</InputLabel>
             <Select value={category} label="Categoría" onChange={(e) => { setCategory(e.target.value); setPage(1); }}>
               <MenuItem value=""><em>Todas</em></MenuItem>
@@ -90,7 +92,7 @@ function CatalogPage() {
               <MenuItem value="Tubérculos">Tubérculos</MenuItem>
             </Select>
           </FormControl>
-          <FormControl size="small" sx={{ width: { xs: '100%', md: 220 }, minWidth: 180 }}>
+          <FormControl size="small" className="catalog-select-field" sx={{ width: { xs: '100%', md: 220 }, minWidth: 180 }}>
             <InputLabel>Ordenar por</InputLabel>
             <Select value={sortBy} label="Ordenar por" onChange={(e) => { setSortBy(e.target.value); setPage(1); }}>
               <MenuItem value=""><em>Relevancia</em></MenuItem>
@@ -103,15 +105,17 @@ function CatalogPage() {
       
       <ProductList products={products} loading={loading} error={error} />
 
-      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         {pageCount > 1 && (
-          <Pagination
-            count={pageCount}
-            page={page}
-            onChange={handlePageChange}
-            color="primary"
-            size="large"
-          />
+          <Box className="catalog-pagination-container">
+            <Pagination
+              count={pageCount}
+              page={page}
+              onChange={handlePageChange}
+              color="primary"
+              size="large"
+            />
+          </Box>
         )}
       </Box>
     </Box>

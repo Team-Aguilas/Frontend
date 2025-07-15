@@ -1,0 +1,82 @@
+/* NavBar.css */
+.navbar-container {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #74a57f 0%, #5d8a66 100%);
+}
+
+.navbar-logo {
+  transition: transform 0.3s ease;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.05);
+}
+
+.navbar-button {
+  background: none !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+  margin: 0 4px !important;
+}
+
+.navbar-button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-button.login-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.navbar-button.login-button:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.navbar-button.logout-button {
+  background: rgba(255, 87, 87, 0.2) !important;
+  border: 2px solid rgba(255, 87, 87, 0.3) !important;
+}
+
+.navbar-button.logout-button:hover {
+  background: rgba(255, 87, 87, 0.3) !important;
+  border-color: rgba(255, 87, 87, 0.5) !important;
+}
+
+.navbar-button.add-product-button {
+  background: rgba(46, 204, 113, 0.2) !important;
+  border: 2px solid rgba(46, 204, 113, 0.3) !important;
+}
+
+.navbar-button.add-product-button:hover {
+  background: rgba(46, 204, 113, 0.3) !important;
+  border-color: rgba(46, 204, 113, 0.5) !important;
+}
+
+.user-greeting {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 400 !important;
+  margin: 0 16px !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+@media (max-width: 768px) {
+  .navbar-button {
+    padding: 6px 12px !important;
+    font-size: 0.875rem !important;
+  }
+  
+  .user-greeting {
+    margin: 0 8px !important;
+    font-size: 0.875rem !important;
+  }
+}
