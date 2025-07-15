@@ -1,13 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardActions, CardContent, CardMedia, Typography, Box } from '@mui/material';
 import { PRODUCTS_SERVER_URL } from '../config';
 import RatingDisplay from './RatingDisplay';
+import CommentsModal from './CommentsModal';
+import { getProductRatings } from '../services/productService';
 
 function ProductCard({ product }) {
+  const [commentsModalOpen, setCommentsModalOpen] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(false);
+
   const imageUrl = product.image_url 
     ? `${PRODUCTS_SERVER_URL}${product.image_url}` 
     : `https://via.placeholder.com/300x300?text=${encodeURIComponent(product.name)}`;
+
+  const handleShowComments = async (e) => {
+    e.preventDefault(); // Evitar que navegue a la página del producto
+    e.stopPropagation();
+    
+    if (product.total_ratings === 0) return;
+    
+    setLoadingComments(true);
+    try {
+      const ratingsData = await getProductRatings(product.id || product._id);
+      setComments(ratingsData);
+      setCommentsModalOpen(true);
+    } catch (error) {
+      console.error('Error al cargar comentarios:', error);
+      // Abrir modal aunque falle para mostrar mensaje de error
+      setComments([]);
+      setCommentsModalOpen(true);
+    } finally {
+      setLoadingComments(false);
+    }
+  };
 
   return (
     <Card sx={{ 
@@ -65,11 +92,13 @@ function ProductCard({ product }) {
             Stock: {product.stock}
           </Typography>
           
-          {/* Mostrar calificación en la tarjeta */}
+          {/* Mostrar calificación en la tarjeta - clickeable para ver comentarios */}
           <RatingDisplay 
             averageRating={product.average_rating} 
             totalRatings={product.total_ratings}
             showDetails={false}
+            clickable={true}
+            onClick={handleShowComments}
           />
         </CardContent>
       </Link>
@@ -79,6 +108,14 @@ function ProductCard({ product }) {
           ${product.price ? product.price.toFixed(2) : 'N/A'}
         </Typography>
       </CardActions>
+      
+      {/* Modal de comentarios */}
+      <CommentsModal
+        open={commentsModalOpen}
+        onClose={() => setCommentsModalOpen(false)}
+        comments={comments}
+        productName={product.name}
+      />
     </Card>
   );
 }
