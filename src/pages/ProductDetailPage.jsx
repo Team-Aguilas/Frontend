@@ -4,7 +4,6 @@ import { getProductById, deleteProduct, createProductRating, getMyRatingForProdu
 import { useAuth } from '../context/AuthContext';
 import { Grid, Box, Typography, Button, CircularProgress, Paper, Divider, Stack } from '@mui/material';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { PRODUCTS_SERVER_URL } from '../config';
@@ -137,11 +136,16 @@ function ProductDetailPage() {
             sx={{
               display: 'flex', justifyContent: 'center', alignItems: 'center',
               height: { xs: 300, sm: 400, md: 500 },
+              width: { xs: 250, sm: 400, md: 500 },
               border: '1px solid #e0e0e0', borderRadius: 2, overflow: 'hidden',
             }}
           >
             <Box component="img" src={imageUrl} alt={product.name}
-              sx={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+              sx={{
+                width: '100%',
+                height: '100%', // <-- Le decimos que ocupe toda la altura del marco
+                objectFit: 'cover', // <-- Cambiamos a 'cover' para que llene el espacio
+              }}
             />
           </Box>
         </Grid>
@@ -168,7 +172,7 @@ function ProductDetailPage() {
               <Typography variant="body1" paragraph color="text.secondary">{product.description}</Typography>
               <Typography variant="h5" sx={{ my: 2 }}><strong>Stock disponible:</strong> {product.stock} unidades</Typography>
               <Typography variant="h3" color="primary.main" sx={{ my: 2, fontWeight: 'bold' }}>
-                ${product.price ? product.price.toFixed(2) : 'N/A'}
+                ${product.price ? product.price.toLocaleString('es-CO') : 'N/A'}
               </Typography>
             </Box>
 

@@ -14,7 +14,7 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#2e7d32' }}>
+    <AppBar position="static" sx={{ backgroundColor: '#74a57f' }}>
       <Toolbar>
         {/* --- INICIO DEL CAMBIO --- */}
         <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
@@ -23,7 +23,7 @@ function Navbar() {
             src="/logo.png" // La ruta pública a tu logo
             alt="Mercado Fresco Logo"
             sx={{
-              height: 70, // Ajusta la altura del logo como prefieras
+              height: 80, // Ajusta la altura del logo como prefieras
               mr: 2, // Margen a la derecha
               mt: 0.5,
               mb: 0.5
