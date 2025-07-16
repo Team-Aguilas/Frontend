@@ -2,10 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getProductById, deleteProduct, createProductRating, getMyRatingForProduct, getProductRatings } from '../services/productService';
 import { useAuth } from '../context/AuthContext';
-import { Grid, Box, Typography, Button, CircularProgress, Paper, Divider, Stack } from '@mui/material';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { useCart } from '../context/CartContext';
+import { 
+  Grid, 
+  Box, 
+  Typography, 
+  Button, 
+  CircularProgress, 
+  Paper, 
+  Divider, 
+  Stack,
+  IconButton
+} from '@mui/material';
+import {
+  WhatsApp as WhatsAppIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Add as AddIcon,
+  Remove as RemoveIcon,
+  ShoppingCart as ShoppingCartIcon
+} from '@mui/icons-material';
 import { PRODUCTS_SERVER_URL } from '../config';
 import RatingDisplay from '../components/RatingDisplay';
 import StarRatingComponent from '../components/StarRatingComponent';
@@ -20,6 +36,7 @@ function ProductDetailPage() {
   const [comments, setComments] = useState([]);
   const { productId } = useParams();
   const { user, isLoggedIn } = useAuth();
+  const { addToCart, isInCart, getItemQuantity, updateQuantity } = useCart();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -115,6 +132,22 @@ function ProductDetailPage() {
     }
   };
 
+  const handleAddToCart = () => {
+    if (product && product.stock > 0) {
+      addToCart(product, 1);
+    }
+  };
+
+  const handleRemoveFromCart = () => {
+    const currentQuantity = getItemQuantity(product.id || product._id);
+    if (currentQuantity > 1) {
+      updateQuantity(product.id || product._id, currentQuantity - 1);
+    }
+  };
+
+  const isProductInCart = product ? isInCart(product.id || product._id) : false;
+  const quantityInCart = product ? getItemQuantity(product.id || product._id) : 0;
+
   if (loading) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}><CircularProgress /></Box>;
   if (error) return <Typography color="error" align="center" sx={{ mt: 5 }}>{error}</Typography>;
   if (!product) return <Typography align="center" sx={{ mt: 5 }}>Producto no encontrado.</Typography>;
@@ -185,19 +218,99 @@ function ProductDetailPage() {
 
             {/* VVVVVV SECCIÓN DE BOTONES CORREGIDA Y COMPLETA VVVVVV */}
             <Stack spacing={2}>
-              <Button 
-                variant="contained" 
-                color="success" 
-                size="large" 
-                startIcon={<WhatsAppIcon />} 
-                sx={{ py: 1.5, textTransform: 'none', fontSize: '1.1rem' }}
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              {/* Botón del carrito */}
+              {product.stock > 0 ? (
+                <Box>
+                  {isProductInCart ? (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                      <IconButton
+                        onClick={handleRemoveFromCart}
+                        disabled={quantityInCart <= 1}
+                        sx={{
+                          background: 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)',
+                          color: 'white',
+                          '&:hover': { background: 'linear-gradient(135deg, #c0392b 0%, #a93226 100%)' },
+                          '&:disabled': { background: '#bdc3c7', color: 'white' }
+                        }}
+                      >
+                        <RemoveIcon />
+                      </IconButton>
+                      
+                      <Typography variant="h6" sx={{ minWidth: '100px', textAlign: 'center', fontWeight: 600 }}>
+                        En carrito: {quantityInCart}
+                      </Typography>
+                      
+                      <IconButton
+                        onClick={handleAddToCart}
+                        disabled={quantityInCart >= product.stock}
+                        sx={{
+                          background: 'linear-gradient(135deg, #74a57f 0%, #5d8a66 100%)',
+                          color: 'white',
+                          '&:hover': { background: 'linear-gradient(135deg, #5d8a66 0%, #4a6e52 100%)' },
+                          '&:disabled': { background: '#bdc3c7', color: 'white' }
+                        }}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </Box>
+                  ) : (
+                    <Button 
+                      variant="contained"
+                      size="large"
+                      startIcon={<ShoppingCartIcon />}
+                      onClick={handleAddToCart}
+                      sx={{
+                        py: 1.5,
+                        textTransform: 'none',
+                        fontSize: '1.1rem',
+                        background: 'linear-gradient(135deg, #74a57f 0%, #5d8a66 100%)',
+                        '&:hover': {
+                          background: 'linear-gradient(135deg, #5d8a66 0%, #4a6e52 100%)',
+                          transform: 'translateY(-1px)',
+                        }
+                      }}
+                    >
+                      Agregar al Carrito
+                    </Button>
+                  )}
+                  
+                  {quantityInCart >= product.stock && (
+                    <Typography variant="body2" sx={{ color: '#e74c3c', textAlign: 'center', mt: 1 }}>
+                      Has alcanzado el stock máximo disponible
+                    </Typography>
+                  )}
+                </Box>
+              ) : (
+                <Typography variant="h6" sx={{ color: '#e74c3c', textAlign: 'center', py: 2 }}>
+                  Producto sin stock
+                </Typography>
+              )}
+              
+              {/* Botón de WhatsApp */}
+              <Button
+                variant="outlined"
+                size="large"
+                startIcon={<WhatsAppIcon sx={{ color: '#25D366' }} />}
+                onClick={() => window.open(`https://wa.me/1234567890?text=Estoy interesado en el producto: ${product.name}`, '_blank')}
+                sx={{
+                  py: 1.5,
+                  textTransform: 'none',
+                  fontSize: '1.1rem',
+                  borderColor: '#25D366',
+                  color: '#25D366',
+                  '&:hover': {
+                    borderColor: '#1ea952',
+                    color: '#1ea952',
+                    backgroundColor: 'rgba(37, 211, 102, 0.04)',
+                    transform: 'translateY(-1px)',
+                  }
+                }}
               >
                 Contactar por WhatsApp
               </Button>
-              {isLoggedIn && user && product.owner_id && (product.owner_id === (user.id || user._id)) && (
+            </Stack>
+            
+            {isLoggedIn && user && product.owner_id && (product.owner_id === (user.id || user._id)) && (
                 <Box sx={{ mt: 2, border: '1px dashed', borderColor: 'grey.400', p: 2, borderRadius: 1 }}>
                   <Typography variant="subtitle2" gutterBottom>Acciones del Propietario:</Typography>
                   <Stack direction="row" spacing={1}>
@@ -219,7 +332,6 @@ function ProductDetailPage() {
                   </Typography>
                 </Box>
               )}
-            </Stack>
           </Stack>
         </Grid>
       </Grid>

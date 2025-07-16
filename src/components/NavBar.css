@@ -60,6 +60,28 @@
   border-color: rgba(46, 204, 113, 0.5) !important;
 }
 
+.cart-icon-button {
+  margin: 0 8px !important;
+  padding: 8px !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.cart-icon-button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cart-icon-button .MuiBadge-badge {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: 0.75rem !important;
+  min-width: 20px !important;
+  height: 20px !important;
+}
+
 .user-greeting {
   color: rgba(255, 255, 255, 0.9) !important;
   font-weight: 400 !important;

@@ -1,12 +1,15 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { useCart } from '../context/CartContext';
+import { AppBar, Toolbar, Typography, Button, Box, Badge, IconButton } from '@mui/material';
+import { ShoppingCart as ShoppingCartIcon } from '@mui/icons-material';
 import './NavBar.css';
 // Ya no importamos LocalFloristIcon
 
 function Navbar() {
   const { isLoggedIn, user, logout } = useAuth();
+  const { getTotalItems } = useCart();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -44,6 +47,19 @@ function Navbar() {
         >
           Catálogo
         </Button>
+
+        {/* Carrito de compras */}
+        <IconButton
+          color="inherit"
+          component={Link}
+          to="/cart"
+          className="navbar-button cart-icon-button"
+          sx={{ mx: 1 }}
+        >
+          <Badge badgeContent={getTotalItems()} color="error">
+            <ShoppingCartIcon />
+          </Badge>
+        </IconButton>
 
         {isLoggedIn ? (
           <>

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardActions, CardContent, CardMedia, Typography, Box } from '@mui/material';
+import { Card, CardActions, CardContent, CardMedia, Typography, Box, Button, IconButton } from '@mui/material';
+import { Add as AddIcon, ShoppingCart as ShoppingCartIcon } from '@mui/icons-material';
 import { PRODUCTS_SERVER_URL } from '../config';
+import { useCart } from '../context/CartContext';
 import RatingDisplay from './RatingDisplay';
 import CommentsModal from './CommentsModal';
 import { getProductRatings } from '../services/productService';
@@ -10,6 +12,7 @@ function ProductCard({ product }) {
   const [commentsModalOpen, setCommentsModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(false);
+  const { addToCart, isInCart, getItemQuantity } = useCart();
 
   // Determinar si es URL externa o archivo local
   const isExternalUrl = product.image_url && (
@@ -42,6 +45,18 @@ function ProductCard({ product }) {
       setLoadingComments(false);
     }
   };
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (product.stock > 0) {
+      addToCart(product, 1);
+    }
+  };
+
+  const isProductInCart = isInCart(product.id || product._id);
+  const quantityInCart = getItemQuantity(product.id || product._id);
 
   return (
     <Card sx={{ 
@@ -114,6 +129,46 @@ function ProductCard({ product }) {
         <Typography variant="h5" color="primary" fontWeight="500">
           ${product.price ? product.price.toLocaleString('es-CO') : 'N/A'}
         </Typography>
+        
+        {/* Botón de agregar al carrito */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {product.stock > 0 ? (
+            <>
+              {isProductInCart && (
+                <Typography variant="body2" sx={{ color: '#74a57f', fontWeight: 600 }}>
+                  En carrito: {quantityInCart}
+                </Typography>
+              )}
+              <Button
+                onClick={handleAddToCart}
+                variant="contained"
+                size="small"
+                startIcon={<AddIcon />}
+                disabled={quantityInCart >= product.stock}
+                sx={{
+                  background: 'linear-gradient(135deg, #74a57f 0%, #5d8a66 100%)',
+                  borderRadius: '8px',
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #5d8a66 0%, #4a6e52 100%)',
+                    transform: 'translateY(-1px)',
+                  },
+                  '&:disabled': {
+                    background: '#bdc3c7',
+                    color: 'white',
+                  }
+                }}
+              >
+                {quantityInCart >= product.stock ? 'Máximo' : 'Agregar'}
+              </Button>
+            </>
+          ) : (
+            <Typography variant="body2" sx={{ color: '#e74c3c', fontWeight: 600 }}>
+              Sin stock
+            </Typography>
+          )}
+        </Box>
       </CardActions>
       
       {/* Modal de comentarios */}
