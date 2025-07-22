@@ -5,7 +5,7 @@ import App from './App.jsx'
 // import './index.css' // Vite puede tener un index.css, puedes borrar su contenido o ajustarlo.
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <App />
-  </React.StrictMode>,
+  // </React.StrictMode>,
 )

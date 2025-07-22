@@ -1,6 +1,7 @@
 // frontend/src/components/Register.jsx
 import React, { useState } from 'react';
 import { registerUser } from '../services/authService';
+import './Register.css';
 
 function Register() {
   const [email, setEmail] = useState('');
@@ -25,41 +26,24 @@ function Register() {
     }
   };
 
-  const formStyle = {
-    padding: '20px',
-    border: '1px solid #ccc',
-    borderRadius: '8px',
-    maxWidth: '400px',
-    margin: '20px auto'
-  };
-
-  const inputStyle = {
-    display: 'block',
-    width: '95%',
-    padding: '8px',
-    marginBottom: '10px',
-    borderRadius: '4px',
-    border: '1.5px solid #ddd',
-  };
-
   return (
-    <div style={formStyle}>
-      <h2>Registrar Nuevo Usuario</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="register-form-container">
+      <h2 className="register-form-title">Registrar Nuevo Usuario</h2>
+      <form onSubmit={handleSubmit} className="register-form">
         <input
           type="email"
           placeholder="Correo Electrónico"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          style={inputStyle}
+          className="register-input"
         />
         <input
           type="text"
           placeholder="Nombre Completo"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
-          style={inputStyle}
+          className="register-input"
         />
         <input
           type="password"
@@ -68,12 +52,12 @@ function Register() {
           onChange={(e) => setPassword(e.target.value)}
           required
           minLength="8"
-          style={inputStyle}
+          className="register-input"
         />
-        <button type="submit" style={{ padding: '10px 15px', cursor: 'pointer' }}>Registrar</button>
+        <button type="submit" className="register-button">Registrar</button>
       </form>
-      {message && <p style={{ color: 'green' }}>{message}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {message && <p className="success-message">{message}</p>}
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 }
